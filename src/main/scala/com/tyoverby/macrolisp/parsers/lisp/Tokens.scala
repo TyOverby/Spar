@@ -14,11 +14,15 @@ object LispTokens {
 
   case class RegexLiteral(reg: String) extends Token
 
-  case class ParenGroup(lst: List[Token]) extends Token
+  trait Group extends Token{
+    val lst: List[Token]
+  }
 
-  case class BracketGroup(lst: List[Token]) extends Token
+  case class ParenGroup(lst: List[Token]) extends Group
 
-  case class CurlyGroup(lst: List[Token]) extends Token
+  case class BracketGroup(lst: List[Token]) extends Group
+
+  case class CurlyGroup(lst: List[Token]) extends Group
 
   case class Repeat(tok: Token) extends Token
 
