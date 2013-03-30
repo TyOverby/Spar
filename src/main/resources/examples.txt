@@ -1,0 +1,15 @@
+
+(:a :xs...) => "(" :a "(" :xs,,, "))"
+
+
+# bre #
+
+(cond (:a :b) (:c :d)...) => "(function () {"
+                             "if(" :a "){"
+                                "return " :b ";"
+                             "}" ("else if(" :c "){"
+                                "return " :d ";"
+                             "}")...
+                             "else{"
+                                "throw cond unsucessfull;"
+                             "}"
