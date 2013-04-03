@@ -51,6 +51,16 @@ object PublicProducer {
     val source = Source.fromFile(fileName)
     val slurped = source.foldLeft("")(_ + _)
 
+    parseStringSource(slurped,fileName)
+  }
+
+  /**
+   * TODO: write documentation
+   * @param slurped
+   * @param fileName
+   * @return
+   */
+  def parseStringSource(slurped: String, fileName: String = "<no file>"):(String, List[LispToken]) = {
     val parts = LispParser.parseSlurped(slurped)
 
     parts match {
