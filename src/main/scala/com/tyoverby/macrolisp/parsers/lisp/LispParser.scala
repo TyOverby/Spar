@@ -2,11 +2,12 @@ package com.tyoverby.macrolisp.parsers.lisp
 
 import com.tyoverby.macrolisp.parsers.AbstractParser
 import com.tyoverby.macrolisp.parsers.lisp.LispTokens._
+import util.parsing.input.CharSequenceReader
 
 object LispParser extends AbstractParser {
 
 
-  override def ident: Parser[String] = """[^0-9()\[\]{}. #":][^()\[\]{}. ""]*""".r
+  override def ident: Parser[String] = """[^0-9()\[\]{}. #":][^()\[\]{} ""]*""".r
 
   private[this] def break: Parser[String] = """[ (){}\[\]]|\z""".r
 
@@ -14,7 +15,7 @@ object LispParser extends AbstractParser {
 
   private[this] def repeat: Parser[Token] = wrappableExpressions <~ "..." ^^ Repeat
 
-  private[this] def number: Parser[Token] = (floatingPointNumber | decimalNumber |  wholeNumber) <~ break ^^ TokenTranslations.genNumberLiteral
+  private[this] def number: Parser[Token] = (floatingPointNumber | decimalNumber |  wholeNumber) /*<~ break*/ ^^ TokenTranslations.genNumberLiteral
 
   private[this] def identifier: Parser[Token] = ident ^^ Identifier
 
@@ -28,11 +29,11 @@ object LispParser extends AbstractParser {
 
   private[this] def wrappableExpressions: Parser[Token] = parenGroup | bracketGroup | curlyGroup | variable
 
-//  private[this] def nonWrappedExp: Parser[Token] = number | stringLit| identifier | variable  | parenGroup | bracketGroup | curlyGroup
-
   private[this] def exp: Parser[Token] = repeat | number | stringLit | identifier | wrappableExpressions
 
   def parseExpression: Parser[Token] = exp
 
   def parseProgram: Parser[List[Token]] = phrase(rep1(exp))
+
+  def parseSlurped(s: String): ParseResult[List[Token]] = parseProgram(new CharSequenceReader(s))
 }

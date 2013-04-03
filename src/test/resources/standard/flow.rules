@@ -1,0 +1,34 @@
+
+# lambda #
+(lambda (:args...) :body) => "(function (" :args,,, "){ return " :body ";})"
+
+# define #
+(define :name :value) => "var " :name " = " :value ";"
+
+# function define #
+(define :name (:args...) :body) => "var " :name " = (function(" :args,,, "){ return " :body ";});"
+
+# set #
+(set! :name :value) => :name "=" :value ";"
+
+# let #
+(let ((:name :value)...) :body) => "((function(" :name,,, "){ return " :body ";})(" :value,,, "))"
+
+# let #
+(let* ((:name :value)...) :body) => "(function(){" ("var " :name "=" :value ";")... "return " :body ";})()"
+
+# letrec #
+(letrec ((:name :value)...) :body) => "(function(){" ("var " :name ";")... (:name "=" :value ";")... "return " :body ";})()"
+
+# cond #
+(cond (:a :b) (:c :d)...) => "(function(){" "if(" :a "){ return " :b ";}" ("else if (" :c "){ return " :d ";}")... "})()"
+
+
+# switch #
+(switch :switchon :defcase (:case :result)...) => "(function (){ switch (" :switchon "){"
+                                                           ("case " :case ": return" :result ";")...
+                                                           "default: return " :defcase ";}})()"
+
+
+# begin #
+(begin :xs...) => "{" (:xs),,, "}"

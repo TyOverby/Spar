@@ -11,32 +11,35 @@ case class ProducerException(reason: String) extends Exception(reason)
 object Producer {
   def mergedown(token: LispToken)(implicit rules: List[Rule]): String = {
     token match {
-      case StringLiteral(s) => s + " "
-      case NumberLiteral(n) => s"$n "
-      case Identifier(i) => i + " "
-      case other => produceSingle(other) + " "
+      case StringLiteral(s) => s
+      case NumberLiteral(n) => if(n%1!=0) s"$n" else f"${n.toInt}"
+      case Identifier(i) => i
+      case other => produceSingle(other)
     }
   }
 
   def produceSingle(lisp: LispToken)(implicit rules: List[Rule]): String = {
     val (env, jss) = PatternMatcher.matchAgainstAll(lisp, rules)
+    walkOuter(env,jss.jsprog)
+  }
 
-    "hi"
+  def produceAll(lisps: List[LispToken])(implicit rules: List[Rule]): String = {
+    lisps.map(l=>produceSingle(l)).mkString("\n")
   }
 
   def walkOuter(env: Env[String, LispToken], jsprog: List[JSToken])(implicit rules: List[Rule]): String = {
     jsprog.map {
       case JSString(s) => s.substring(1, s.length - 1)
       case JSVariable(v) => mergedown(env.singleVars(v))
-      case CommaRepeat(JSVariable(i)) => env.listVars(i).map(mergedown).mkString(", ")
-      case CommaRepeat(group: JSGroup) => walkInner(env, group).mkString(", ")
-      case JSRepeat(group: JSGroup) => walkInner(env, group).mkString(" ")
-    }.mkString(" ")
+      case CommaRepeat(JSVariable(i)) => env.listVars(i).map(mergedown).mkString(",")
+      case CommaRepeat(group: JSGroup) => walkInner(env, group).mkString(",")
+      case JSRepeat(group: JSGroup) => walkInner(env, group).mkString("")
+    }.mkString("")
   }
 
   def walkInner(env: Env[String, LispToken], jsSide: JSGroup)(implicit rules: List[Rule]): List[String] = {
     def walkInsideGroup(env: Env[String, LispToken], part: JSToken): (String, Env[String, LispToken]) = part match {
-      case JSString(s) => (s.substring(1, s.length - 1) + " ", env)
+      case JSString(s) => (s.substring(1, s.length - 1), env)
       case JSVariable(v) => {
         val (varResult, newEnv) = env.getFromList(v)
         (mergedown(varResult), newEnv)
@@ -54,8 +57,6 @@ object Producer {
           val (str, newenv) = walkInsideGroup(mutEnv, part)
           sb.append(str)
           mutEnv = newenv
-
-          println(mutEnv)
         }
       }
     }
@@ -63,8 +64,8 @@ object Producer {
       case ListEmptyException => return Nil
     }
 
-//    if (mutEnv.consumedOnlySingles) throw ConsumingOnlySingles
+    if (mutEnv.consumedOnlySingles) throw new ConsumingOnlySingles
 
-    sb.toString() :: walkInner(mutEnv, jsSide)
+    sb.toString() :: walkInner(mutEnv.copy(consumedOnlySingles = true), jsSide)
   }
 }

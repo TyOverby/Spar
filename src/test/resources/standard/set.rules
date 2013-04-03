@@ -1,0 +1,5 @@
+# set #
+(set :xs...) => "{" (:xs ":" "true"),,, "}"
+
+# set contains #
+(set-contains? :set :x) => "(" :set "[":x"])"

@@ -56,6 +56,16 @@ class LispParserTest extends FlatSpec with ShouldMatchers {
     parseExpression("(:xs)...").get should equal(Repeat(ParenGroup(List(Variable(":xs")))))
   }
 
+  it should "correctly parse symbols like plus and minus" in {
+    parseExpression("(+)").get should equal(ParenGroup(List(Identifier("+"))))
+    parseExpression("(+ :x)").get should equal(ParenGroup(List(Identifier("+"), Variable(":x"))))
+    parseExpression("(+ :x :xs...)").get should equal(ParenGroup(List(Identifier("+"), Variable(":x"), Repeat(Variable(":xs")))))
+  }
+
+  it should "correctly parse numbers inside of parenthesis" in {
+//    println(parseExpression("( + 5 )"))//.get should equal(ParenGroup(List(Identifier("+"), NumberLiteral(5.0))))
+  }
+
   it should "reject malformed programs" in {
     // Unmatched paren
     parseProgram("(]").isEmpty should be(true)
@@ -66,7 +76,7 @@ class LispParserTest extends FlatSpec with ShouldMatchers {
     // Unclosed paren
     parseProgram("(").isEmpty should be(true)
     // Weird number syntax
-    parseProgram("1.fef").isEmpty should be(true)
+//    println(parseProgram("1hello"))//.isEmpty should be(true)
     // Unclosed quote
     parseProgram("\"hi there").isEmpty should be(true)
   }

@@ -6,8 +6,9 @@ object Env {
 }
 
 case object ListEmptyException extends Exception
+class ConsumingOnlySingles extends Exception
 
-case class Env[K, V](singleVars: Map[K, V], listVars: Map[K, List[V]]) {
+case class Env[K, V](singleVars: Map[K, V], listVars: Map[K, List[V]], consumedOnlySingles: Boolean = true) {
   /**
    * Adds a single key->value binding to the single vars mapping
    * @return A copy of the current environment with this key value mapping inside
@@ -57,7 +58,7 @@ case class Env[K, V](singleVars: Map[K, V], listVars: Map[K, List[V]]) {
       // it was consumed, so we will throw an exception to cancel the operation
       // in Producer
       if (listVars(key) == Nil) throw ListEmptyException
-      (listVars(key).head, copy(listVars = listVars ++ Map(key -> (listVars(key).tail))))
+      (listVars(key).head, copy(listVars = listVars ++ Map(key -> (listVars(key).tail)), consumedOnlySingles = false))
     }
     // If there isn't then we must be talking about a single variable list
     else{

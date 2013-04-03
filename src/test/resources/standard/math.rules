@@ -1,0 +1,58 @@
+
+# less than #
+(< :a :b) => "(" :a "<" :b ")"
+
+# less than or equal to #
+(<= :a :b) => "(" :a "<=" :b ")"
+
+# greater than #
+(> :a :b) => "(" :a ">" :b ")"
+
+# greater than or equal to #
+(>= :a :b) => "(" :a ">=" :b ")"
+
+# strict equality #
+(= :a :b) => "(" :a "===" :b ")"
+
+# lenient equality #
+(=! :a :b) => "(" :a "==" :b ")"
+
+
+# multiplication no arg #
+(*) => "1"
+
+# multiplication single arg #
+(* :a) => :a
+
+# multiplication multi arg #
+(* :a :xs...) => "(" :a (" * " :xs)... ")"
+
+
+# division no arg #
+(/) => "1"
+
+# division single arg #
+(/ :a) => :a
+
+# division multi arg #
+(/ :a :xs...) => "(" :a (" / " :xs)... ")"
+
+
+# addition no arg #
+(+) => "0"
+
+# addition single arg #
+(+ :a) => :a
+
+# addition multi arg #
+(+ :a :xs...) => "(" :a (" + " :xs)... ")"
+
+
+# subtraction no arg #
+(-) => "0"
+
+# subtraction single arg #
+(- :a) => :a
+
+# subtraction multi arg #
+(- :a :xs...) => "(" :a (" - " :xs)... ")"
