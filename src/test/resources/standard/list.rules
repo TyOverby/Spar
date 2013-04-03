@@ -1,11 +1,11 @@
 # quote #
-(quote :xs...) => "[" :xs,,, "]"
+(quote :xs...) => "[" (:xs ",[")... "]"
 
 # cons #
-(cons :x :xs) => "([" :x "] + " :xs ")"
+(cons :x :xs) => "([" :x ", " :xs "])"
 
 # car #
 (car :xs) => :xs "[0]"
 
 # cdr #
-(cdr :xs) => :xs ".slice(1)"
+(cdr :xs) => :xs "[1]"

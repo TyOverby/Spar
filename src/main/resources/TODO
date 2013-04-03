@@ -1,0 +1,8 @@
+Make it so you can have anonymous pattern matchers
+for things like this
+# quote #
+(quote :xs...) => "[" (:xs ",[")... "]"
+
+
+Make inbetween matcher
+(cond xs... x) =>
