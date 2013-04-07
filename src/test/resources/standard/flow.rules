@@ -2,6 +2,9 @@
 # lambda #
 (lambda (:args...) :body) => "(function (" :args,,, "){ return " :body ";})"
 
+# parameterless lambda #
+(lambda :body) => "(function (){ return " :body ";})"
+
 # define #
 (define :name :value) => "var " :name " = " :value ";"
 
@@ -23,12 +26,17 @@
 # cond #
 (cond (:a :b) (:c :d)...) => "(function(){" "if(" :a "){ return " :b ";}" ("else if (" :c "){ return " :d ";}")... "})()"
 
+# if #
+(if :cond :then :else) => "(" :cond " ? " :then " : " :else ")"
+
 
 # switch #
 (switch :switchon :defcase (:case :result)...) => "(function (){ switch (" :switchon "){"
                                                            ("case " :case ": return" :result ";")...
                                                            "default: return " :defcase ";}})()"
 
+# single begin #
+(begin :x) => :x
 
 # begin #
-(begin :xs...) => "{" (:xs),,, "}"
+(begin :xs...) => "(" (:xs),,, ")"
