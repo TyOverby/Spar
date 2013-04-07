@@ -37,6 +37,8 @@ object PatternMatcher {
           // then add all of the rest of the Tokens to the environment
           // with the name of that variable
           case ((Repeat(Variable(inner))) :: Nil, oxy) => env.addList(inner, oxy)
+
+
           // If a group is being repeated, then recursively match on what is inside of that group
           // and add up the environment in a way that moves the values into listVars
           case ((Repeat(inner: Group)) :: Nil, oxy) => {
@@ -48,6 +50,16 @@ object PatternMatcher {
               // Concatenate all of the values (currently in a singleVar)
               // into one big environment where they all live in a listVar
               .foldLeft(Env.empty[String, LispToken])((a, b) => b +> a)
+          }
+          // If we have a repeated variable that wasn't at the end, we should try
+          // to split the list of matched variables into two and then match them individually
+          case ((Repeat(inner)) :: xs, oxy) => {
+            val remainingXs = xs.length
+            val totalYs = oxy.length
+            val repeatedYs = totalYs - remainingXs
+
+            val (rep, rest) = oxy.splitAt(repeatedYs)
+            extract(Repeat(inner) :: Nil, rep) ++ extract(xs, rest)
           }
           // Match on the first elements of both lists, and then concatenate
           // them when done

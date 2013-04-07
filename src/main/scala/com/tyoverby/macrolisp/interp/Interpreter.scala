@@ -69,7 +69,7 @@ object Helper {
   def sameParens(str: List[Char]): Boolean = {
     def helper(str: List[Char], parenCount: Int, bracketCount: Int, curleyCount: Int): Boolean = {
       str match {
-        case Nil => parenCount == 0 && bracketCount == 0 && curleyCount == 0
+        case Nil => parenCount >= 0 && bracketCount >= 0 && curleyCount >= 0
         case '(' :: xs => helper(xs, parenCount + 1, bracketCount, curleyCount)
         case ')' :: xs => helper(xs, parenCount - 1, bracketCount, curleyCount)
         case '[' :: xs => helper(xs, parenCount, bracketCount + 1, curleyCount)
