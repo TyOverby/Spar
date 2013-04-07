@@ -56,3 +56,13 @@
 
 # subtraction multi arg #
 (- :a :xs...) => "(" :a (" - " :xs)... ")"
+
+# negate #
+(neg :x) => "(-" :x ")"
+
+
+# check negative #
+(neg? :x) => "(" :x "< 0)"
+
+# check positive #
+(pos? :x) => "(" :x "> 0)"

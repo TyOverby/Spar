@@ -31,9 +31,9 @@
 
 
 # switch #
-(switch :switchon :defcase (:case :result)...) => "(function (){ switch (" :switchon "){"
-                                                           ("case " :case ": return" :result ";")...
-                                                           "default: return " :defcase ";}})()"
+(switch :switchon (:case :result)... ('default :defcase)) => "(function (){ switch (" :switchon "){"
+                                                                        ("case " :case ": return" :result ";")...
+                                                                         "default: return " :defcase ";}})()"
 
 # single begin #
 (begin :x) => :x
