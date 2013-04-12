@@ -24,9 +24,11 @@ object InterpreterHelper {
     val sb = new StringBuilder
     var seen = false
     do{
-      if (!seen) print("> ") else print(". "); seen = true
+      if (!seen) print("> ") else print("\t"); seen = true
       sb.append(input.readLine()).append(" ")
     }while(!sameParens(sb.toList))
     sb.toString()
   }
 }
+
+
