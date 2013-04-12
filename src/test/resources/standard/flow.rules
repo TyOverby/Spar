@@ -40,3 +40,7 @@
 
 # begin #
 (begin :xs...) => "(" (:xs),,, ")"
+
+
+# thunk #
+(delay :x ) => "(function () { return " :x ";})"
