@@ -13,7 +13,7 @@ object InterpreterHelper {
         case ']' :: xs => helper(xs, parenCount, bracketCount - 1, curleyCount)
         case '{' :: xs => helper(xs, parenCount, bracketCount, curleyCount + 1)
         case '}' :: xs => helper(xs, parenCount, bracketCount, curleyCount - 1)
-        case _   :: xs => helper(xs, parenCount, bracketCount, curleyCount)
+        case _ :: xs => helper(xs, parenCount, bracketCount, curleyCount)
       }
     }
     helper(str, 0, 0, 0)
@@ -23,10 +23,11 @@ object InterpreterHelper {
     val input = new BufferedReader(new InputStreamReader(System.in))
     val sb = new StringBuilder
     var seen = false
-    do{
-      if (!seen) print("> ") else print("\t"); seen = true
+    do {
+      if (!seen) print("> ") else print("\t");
+      seen = true
       sb.append(input.readLine()).append(" ")
-    }while(!sameParens(sb.toList))
+    } while (sb.toString().trim.size == 0 || !sameParens(sb.toList))
     sb.toString()
   }
 }

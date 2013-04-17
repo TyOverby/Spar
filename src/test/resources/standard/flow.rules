@@ -2,8 +2,8 @@
 # lambda #
 (lambda (:args...) :body) => "(function (" :args,,, "){ return " :body ";})"
 
-# parameterless lambda #
-(lambda :body) => "(function (){ return " :body ";})"
+# lambda args as array #
+(lambda :arg :body) => "(function () { var " :arg "= Array.prototype.slice.call(arguments); return " :body ";})"
 
 # define #
 (define :name :value) => "var " :name " = " :value ";"
@@ -40,3 +40,6 @@
 
 # begin #
 (begin :xs...) => "(" (:xs),,, ")"
+
+# new #
+(new :obj :args...) => "( new " :obj "(" :args,,, "))"
