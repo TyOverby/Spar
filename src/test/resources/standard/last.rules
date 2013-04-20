@@ -1,10 +1,12 @@
 
 
 # function application  always goes last #
-(:f :args...) => :f "(" :args,,, ")"
+(:f :args...) => {
+ :f "(" :args,,, ")"
+}
 
 
 # the below are only used for testing on the console #
 
 # literals #
-:x => :x
+:x => { :x }

@@ -9,7 +9,7 @@ object GenJsParser extends AbstractParser {
 
   private[this] def variable: Parser[Token] = ":[a-zA-Z]+".r ^^ Variable
 
-  private[this] def group: Parser[Token] = "(" ~> rep(exp) <~ ")" ^^ Group
+  private[this] def group: Parser[Token] = "(" ~> rep(innerExp) <~ ")" ^^ Group
 
   private[this] def repeat: Parser[Token] = nonWrappingExp <~ "..." ^^ Repeat
 
@@ -17,7 +17,9 @@ object GenJsParser extends AbstractParser {
 
   private[this] def nonWrappingExp: Parser[Token] = variable | group
 
-  def exp: Parser[Token] = repeat | commaRepeat | nonWrappingExp | stringLit
+  private[this] def innerExp: Parser[Token] = repeat | commaRepeat | nonWrappingExp | stringLit
 
-  def parseProgram: Parser[List[Token]] = phrase(rep1(exp))
+  def exp: Parser[List[Token]] = "{" ~> rep1(innerExp) <~ "}"
+
+  def parseProgram: Parser[List[Token]] = phrase(exp)
 }

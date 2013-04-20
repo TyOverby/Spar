@@ -6,6 +6,7 @@ import com.tyoverby.macrolisp.compiler.Producer
 import io.Source
 import com.tyoverby.macrolisp.parsers.lisp.LispParser
 import com.tyoverby.macrolisp.parsers.lisp.{Token => LispToken}
+import java.io.File
 
 case class RuleParsingFailure(msg: String) extends Exception(msg)
 
@@ -83,5 +84,9 @@ object PublicProducer {
 
   def compileFiles(programFile: String, rulesFiles: String*): (String, String) = {
     compile(parseSource(programFile), parseAllRules(rulesFiles:_*))
+  }
+
+  def compileFile(file: File, rules: List[Rule]): (String, String) = {
+    compile(parseSource(file.toString), rules)
   }
 }

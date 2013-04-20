@@ -1,14 +1,22 @@
 # method access #
-(call :obj (:f :args...)) => :obj "." :f "(" :args,,, ")"
+(call :obj (:f :args...)) => {
+    :obj "." :f "(" :args,,, ")"
+}
 
 # field access #
-(get :obj :acc) => :obj "." :acc
+(get :obj :acc) => {
+    :obj "." :acc
+}
 
 # struct no arg #
-(struct) => "{}"
+(struct) => { "{}" }
 
 # struct one arg #
-(struct (:name :content)) => "{" :name ": " :content "}"
+(struct (:name :content)) => {
+    "{" :name ": " :content "}"
+}
 
 # struct multi arg #
-(struct (:a :b) (:c :d)...) => "{" :a ": " :b ("," :c ": " :d)... "}"
+(struct (:a :b) (:c :d)...) => {
+    "{" :a ": " :b ("," :c ": " :d)... "}"
+}
