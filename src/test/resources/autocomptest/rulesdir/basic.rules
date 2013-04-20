@@ -1,0 +1,15 @@
+
+# lambda #
+(lambda (:args...) :body) => {
+    "(function (" :args,,, "){ return " :body ";})"
+}
+
+# define #
+(define :name :value) => {
+    "var " :name " = " :value ";"
+}
+
+# if #
+(if :cond :then :else) => {
+    "(" :cond " ? " :then " : " :else ")"
+}

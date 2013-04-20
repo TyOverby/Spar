@@ -1,0 +1,22 @@
+var x = "hi";
+var f = (function (){ return console.log(x);});
+((function(a,b){ return body;})(5,6))
+(function(){if(<(5,6)){ return b;}else if (c){ return d;}else if (e){ return f;}else if (g){ return h;}})()
+var fact = (function (n){ return (function(){if(<=(n,1)){ return 1;}else if (true){ return *(n,fact(-(n,1)));}})();});
+var fib_bad = (function (n){ return (function(){if(=(n,0)){ return 0;}else if (=(n,1)){ return 1;}else if (true){ return +(fib(-(n,1)),fib(-(n,2)));}})();});
+var fib_good = lambda(n());
+car(cdr(quote(1,2,3,4)))
+call("test",tolower())
+get("test",getx)
+hi=5;
+struct(tester,win(hi,lol))
+(function(){var a;var b;a=5;b=a;return console.log(b);})()
+var fun = (function(a,b,c){ return println(a,b,c);});
+var x = 5;
+switch(x,"lolno",2("hi"),3("hello"),4("nope"))
+struct(a(5))
+(console.log(5),console.log("hi"),10)
+var http = require("http");
+call(http.createServer((function (req,res){ return (res.writeHead(200,struct("Content-Type"("text/plain"))),res.end("hello world"));})),listen(1137,"127.0.0.1"))
+var my_set = set(1,2,3,4,"hi");
+set-contains?(my_set,4)

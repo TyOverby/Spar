@@ -1,45 +1,79 @@
 
 # lambda #
-(lambda (:args...) :body) => "(function (" :args,,, "){ return " :body ";})"
+(lambda (:args...) :body) => {
+    "(function (" :args,,, "){ return " :body ";})"
+}
 
 # lambda args as array #
-(lambda :arg :body) => "(function () { var " :arg "= Array.prototype.slice.call(arguments); return " :body ";})"
+(lambda :arg :body) => {
+ "(function () { var " :arg "= Array.prototype.slice.call(arguments); return " :body ";})"
+}
 
 # define #
-(define :name :value) => "var " :name " = " :value ";"
+(define :name :value) => {
+    "var " :name " = " :value ";"
+}
 
 # function define #
-(define :name (:args...) :body) => "var " :name " = (function(" :args,,, "){ return " :body ";});"
+(define :name (:args...) :body) => {
+    "var " :name " = (function(" :args,,, "){ return " :body ";});"
+}
 
 # set #
-(set! :name :value) => :name "=" :value ";"
+(set! :name :value) => {
+    :name "=" :value ";"
+}
 
 # let #
-(let ((:name :value)...) :body) => "((function(" :name,,, "){ return " :body ";})(" :value,,, "))"
+(let ((:name :value)...) :body) => {
+    "((function(" :name,,, "){ return " :body ";})(" :value,,, "))"
+}
 
 # let #
-(let* ((:name :value)...) :body) => "(function(){" ("var " :name "=" :value ";")... "return " :body ";})()"
+(let* ((:name :value)...) :body) => {
+    "(function(){" ("var " :name "=" :value ";")... "return " :body ";})()"
+}
 
 # letrec #
-(letrec ((:name :value)...) :body) => "(function(){" ("var " :name ";")... (:name "=" :value ";")... "return " :body ";})()"
+(letrec ((:name :value)...) :body) => {
+    "(function(){" ("var " :name ";")... (:name "=" :value ";")... "return " :body ";})()"
+}
 
 # cond #
-(cond (:a :b) (:c :d)...) => "(function(){" "if(" :a "){ return " :b ";}" ("else if (" :c "){ return " :d ";}")... "})()"
+(cond (:a :b) (:c :d)...) => {
+    "(function(){" "if(" :a "){ return " :b ";}" ("else if (" :c "){ return " :d ";}")... "})()"
+}
 
 # if #
-(if :cond :then :else) => "(" :cond " ? " :then " : " :else ")"
+(if :cond :then :else) => {
+    "(" :cond " ? " :then " : " :else ")"
+}
 
 
 # switch #
-(switch :switchon (:case :result)... ('default :defcase)) => "(function (){ switch (" :switchon "){"
-                                                                        ("case " :case ": return" :result ";")...
-                                                                         "default: return " :defcase ";}})()"
+(switch :switchon (:case :result)... ('default :defcase)) => {
+     "(function (){ switch (" :switchon "){"
+     ("case " :case ": return" :result ";")...
+     "default: return " :defcase ";}})()"
+ }
 
-# single begin #
-(begin :x) => :x
-
-# begin #
-(begin :xs...) => "(" (:xs),,, ")"
 
 # new #
-(new :obj :args...) => "( new " :obj "(" :args,,, "))"
+(new :obj :args...) => {
+    "( new " :obj "(" :args,,, "))"
+}
+
+
+# single begin #
+(begin :x) => { :x }
+
+# begin #
+(begin :xs...) => {
+    "(" (:xs),,, ")"
+}
+
+
+# thunk #
+(delay :x ) => {
+    "(function () { return " :x ";})"
+}

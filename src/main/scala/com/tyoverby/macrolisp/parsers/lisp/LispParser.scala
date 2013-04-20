@@ -1,13 +1,13 @@
 package com.tyoverby.macrolisp.parsers.lisp
 
-import com.tyoverby.macrolisp.parsers.AbstractParser
 import com.tyoverby.macrolisp.parsers.lisp.LispTokens._
 import util.parsing.input.CharSequenceReader
+import scala.util.parsing.combinator.JavaTokenParsers
 
-object LispParser extends AbstractParser {
+object LispParser extends JavaTokenParsers {
 
 
-  override def ident: Parser[String] = """[^0-9()\[\]{}. #":][^()\[\]{} ""]*""".r
+  override def ident: Parser[String] = """[^0-9()\[\]{}. #":][^()\[\]{} '"\n]*""".r
 
   private[this] def break: Parser[String] = """[ (){}\[\]]|\z""".r
 
@@ -15,7 +15,7 @@ object LispParser extends AbstractParser {
 
   private[this] def repeat: Parser[Token] = wrappableExpressions <~ "..." ^^ Repeat
 
-  private[this] def number: Parser[Token] = (floatingPointNumber | decimalNumber |  wholeNumber) /*<~ break*/ ^^ TokenTranslations.genNumberLiteral
+  private[this] def number: Parser[Token] = (floatingPointNumber | decimalNumber | wholeNumber) /*<~ break*/ ^^ TokenTranslations.genNumberLiteral
 
   private[this] def identifier: Parser[Token] = ident ^^ Identifier
 

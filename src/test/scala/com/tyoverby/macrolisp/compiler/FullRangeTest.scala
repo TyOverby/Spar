@@ -11,7 +11,7 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
   val produce = (Producer.produceAll(_:List[LispToken])(_:List[Rule])).curried
 
   "full production" should "compile simple function matching correctly" in {
-    val rules = """ (:a :b :c) => :a "(" :b ", " :c ")"  """
+    val rules = """ (:a :b :c) => {:a "(" :b ", " :c ")" } """
     val prog = """(func op1 op2)"""
 
     val parsedRules: List[Rule] = parseRules(rules)
@@ -21,7 +21,7 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "compile a more advanced test of function matching correctly" in {
-    val rules = """ (:a :xs...) => :a "(" ( "(" :xs ")" ),,, ")"  """
+    val rules = """ (:a :xs...) => { :a "(" ( "(" :xs ")" ),,, ")" } """
     val prog = """(func op1 op2 op3 op4 op5)"""
 
     val parsedRules: List[Rule] = parseRules(rules)
@@ -33,11 +33,11 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
   it should "compile addition with multiple rules" in {
     val rules =
       """ # addition #
-        | (+) => "0"
+        | (+) => { "0" }
         | # addition #
-        | (+ :x) => :x
+        | (+ :x) => { :x }
         | # addition #
-        | (+ :x :xs...) => "(" :x "" ( "+" :xs )... ")"
+        | (+ :x :xs...) => { "(" :x "" ( "+" :xs )... ")" }
       """.stripMargin
 
     val parsedRules = parseRules(rules)
@@ -47,7 +47,7 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
     produce(parseProgram("(+ 5 10)"))(parsedRules) should equal ("(5+10)")
   }
   it should "compile lambdas correctly" in {
-    val rules = """ (lambda (:xs...) :body) => "(function (" :xs,,, "){ return " :body ";})" """
+    val rules = """ (lambda (:xs...) :body) => { "(function (" :xs,,, "){ return " :body ";})" } """
     val prog = """(lambda (x y z) "body goes here")"""
 
     val parsedRules = parseRules(rules)
@@ -58,13 +58,13 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
 
   it should "compile cond statements correctly" in {
     val rules =
-      """(cond (:a :b) (:c :d)...) => "(function (){"
+      """(cond (:a :b) (:c :d)...) => { "(function (){"
         |                                 "if(" :a "){"
         |                                   "return " :b ";"
         |                                 "}"
         |                                 ("else if(" :c "){"
         |                                   "return " :d ";"
-        |                                  "}")... "})"
+        |                                  "}")... "}) " }
       """.stripMargin
 
     val prog = """(cond (a b) (c d) (e f) (g h))"""

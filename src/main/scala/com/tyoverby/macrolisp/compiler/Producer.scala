@@ -24,7 +24,7 @@ object Producer {
   }
 
   def produceAll(lisps: List[LispToken])(implicit rules: List[Rule]): String = {
-    lisps.map(l=>produceSingle(l)).mkString("\n")
+    lisps.map(l=>produceSingle(l)).mkString("")
   }
 
   def walkOuter(env: Env[String, LispToken], jsprog: List[JSToken])(implicit rules: List[Rule]): String = {
@@ -33,6 +33,7 @@ object Producer {
       case JSVariable(v) => mergedown(env.singleVars(v))
       case CommaRepeat(JSVariable(i)) => env.listVars(i).map(mergedown).mkString(",")
       case CommaRepeat(group: JSGroup) => walkInner(env, group).mkString(",")
+      case JSRepeat(JSVariable(i)) => env.listVars(i).map(mergedown).mkString(" ")
       case JSRepeat(group: JSGroup) => walkInner(env, group).mkString("")
     }.mkString("")
   }

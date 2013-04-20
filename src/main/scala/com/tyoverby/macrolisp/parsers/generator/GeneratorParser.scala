@@ -1,12 +1,12 @@
 package com.tyoverby.macrolisp.parsers.generator
 
-import com.tyoverby.macrolisp.parsers.AbstractParser
 import util.parsing.input.CharSequenceReader
+import scala.util.parsing.combinator.JavaTokenParsers
 
-object GeneratorParser extends AbstractParser {
+import com.tyoverby.macrolisp.parsers.lisp.LispParser
+import com.tyoverby.macrolisp.parsers.genjs.GenJsParser
 
-  import com.tyoverby.macrolisp.parsers.lisp.LispParser
-  import com.tyoverby.macrolisp.parsers.genjs.GenJsParser
+object GeneratorParser extends JavaTokenParsers {
 
 
   def parseLisp: Parser[LispSide] = (LispParser.parseExpression ^^ LispSide).asInstanceOf[Parser[LispSide]]
@@ -29,11 +29,11 @@ object GeneratorParser extends AbstractParser {
       .toList
   }
 
-//  def parseSlurpedDebug(str: String): List[(ParseResult[Rule], String)] = {
-//    val split = str.split(separator.toString()).filter(_.trim.length > 0)
-//    split.map(x => new CharSequenceReader(x))
-//      .map(parseRule)
-//      .zip(split)
-//      .toList
-//  }
+  //  def parseSlurpedDebug(str: String): List[(ParseResult[Rule], String)] = {
+  //    val split = str.split(separator.toString()).filter(_.trim.length > 0)
+  //    split.map(x => new CharSequenceReader(x))
+  //      .map(parseRule)
+  //      .zip(split)
+  //      .toList
+  //  }
 }

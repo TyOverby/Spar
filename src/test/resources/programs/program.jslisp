@@ -1,0 +1,83 @@
+(define x "hi")
+
+(define f (lambda () (console.log x)))
+
+(let ([a 5] [b 6]) body)
+
+(cond [(< 5 6) b]
+      [c d]
+      [e f]
+      [g h])
+
+(define fact (lambda (n) (cond [(<= n 1) 1]
+                               [true (* n (fact (- n 1)))])))
+
+(define fib_bad (lambda (n) (cond [(= n 0) 0]
+                                  [(= n 1) 1]
+                                  [true (+ (fib (- n 1))
+                                           (fib (- n 2)))])))
+
+(define fib_good (lambda (n) ))
+
+(car (cdr (quote 1 2 3 4 )))
+
+(call "test" (tolower))
+
+(get "test" getx)
+
+(set! hi 5)
+
+(struct tester [win hi lol])
+
+(letrec ([a 5] [b a]) (console.log b))
+
+(define fun (a b c) (println a b c))
+
+(define x 5)
+(switch x "lolno" [2 "hi"]
+                  [3 "hello"]
+                  [4 "nope"])
+
+
+(struct [a 5])
+
+
+(begin (console.log 5)
+       (console.log "hi")
+       10)
+
+
+(define http (require "http"))
+
+(call (http.createServer (lambda (req res)
+           (begin (res.writeHead 200 (struct ["Content-Type" "text/plain"]))
+                   (res.end "hello world"))))
+     (listen 1137 "127.0.0.1"))
+
+
+
+
+
+
+
+(define my_set (set 1 2 3 4 "hi"))
+(set-contains? my_set 4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

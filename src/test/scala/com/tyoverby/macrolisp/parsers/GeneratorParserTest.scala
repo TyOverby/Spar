@@ -15,7 +15,7 @@ class GeneratorParserTest extends FlatSpec with ShouldMatchers {
   implicit def str2reader(str: String) = new CharSequenceReader(str)
 
   "The Generator Parser" should "correctly validate rules" in {
-    parseRule( """ (a :b :c) => "a(" :b "," :c ")" """).get should equal(
+    parseRule( """ (a :b :c) => {"a(" :b "," :c ")"} """).get should equal(
       Rule(LispSide(LispParenGroup(List(LispIdentifier("a"), LispVariable(":b"), LispVariable(":c")))),
            JSSide(List(JSStringLiteral("\"a(\""),JSVariable(":b"), JSStringLiteral("\",\""), JSVariable(":c"), JSStringLiteral("\")\"")))))
   }

@@ -4,5 +4,5 @@ for things like this
 (quote :xs...) => "[" (:xs ",[")... "]"
 
 
-Make inbetween matcher
+Make in between matcher
 (cond xs... x) =>
