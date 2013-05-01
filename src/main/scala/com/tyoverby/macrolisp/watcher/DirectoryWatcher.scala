@@ -16,19 +16,12 @@ case class DirectoryWatcher(dirPath: File, regex: String,
   val root = dirPath
   val compRegex = regex.r
 
-  def getAllFrom(dir: File): List[File] = {
+  def getAllFrom(dir: File):List[File] = {
     val (files, folders) = dir.listFiles().toList.partition(_.isFile)
     val matchingFiles = files.filter(n => compRegex.findFirstIn(n.toString).isDefined)
 
     matchingFiles ++ folders.map(getAllFrom).flatten
   }
-
-  def allFilesFromRoot() {
-    getAllFrom(root).foreach(exists)
-  }
-
-  allFilesFromRoot()
-
 
   val watcher = root.toPath.getFileSystem.newWatchService()
 
@@ -41,7 +34,9 @@ case class DirectoryWatcher(dirPath: File, regex: String,
 
   registerFrom(root)
 
-
+  def allFilesFromRoot() = {
+    getAllFrom(root)
+  }
   override def run() {
 
     running = true

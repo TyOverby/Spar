@@ -57,27 +57,5 @@
 
 
 
-
-
-
 (define my_set (set 1 2 3 4 "hi"))
 (set-contains? my_set 4)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

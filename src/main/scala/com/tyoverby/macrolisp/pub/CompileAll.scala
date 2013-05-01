@@ -27,11 +27,11 @@ object CompileAll {
     val allRules = allFiles(rulesPattern)(rulesDir)
     val allSrc = allFiles(srcPattern)(srcDir)
 
-    val parsedRules = PublicProducer.parseAllRules(allRules.map(_.toString): _*)
+    val parsedRules = PublicProducer.parseRuleFiles(allRules:_*)
 
     allSrc.foreach(f => {
       println(s"compiling $f...")
-      val (_, produced) = PublicProducer.compileFile(f, parsedRules)
+      val produced = PublicProducer.compileFileRules(f, parsedRules)
 
       val srcdir = srcDir.getAbsoluteFile.toString
       val file = f.getAbsoluteFile.toString

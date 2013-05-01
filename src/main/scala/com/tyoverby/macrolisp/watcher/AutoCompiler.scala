@@ -2,10 +2,11 @@ package com.tyoverby.macrolisp.watcher
 
 import collection.mutable
 import collection.JavaConversions._
+import java.io.{Closeable, BufferedWriter, FileWriter}
 import com.tyoverby.macrolisp.parsers.generator.Rule
 import com.tyoverby.macrolisp.pub.PublicProducer
 import java.util
-import java.io.{Closeable, BufferedWriter, FileWriter, File}
+import java.io.File
 
 /**
  * User: Ty
@@ -78,7 +79,7 @@ class AutoCompiler(rulesDirectory: File, rulesRegex: String,
   }
 
   def insertRule(file: File) {
-    fileToRuleMap += (file -> PublicProducer.parseRules(file.toString))
+    fileToRuleMap += (file -> PublicProducer.parseRule(file))
   }
 
   def deleteRule(file: File) {
@@ -86,13 +87,13 @@ class AutoCompiler(rulesDirectory: File, rulesRegex: String,
   }
 
   private[this] def compile(sourceFile: File, rules: List[Rule]) {
-    val (name, contents) = PublicProducer.compileFile(sourceFile, rules)
+    val contents = PublicProducer.compileFileRules(sourceFile, rules)
 
     val srcdir = sourceDirectory.getAbsoluteFile.toString
     val file = sourceFile.getAbsoluteFile.toString
     val dstdir = outputDirectory.getAbsoluteFile.toString
 
-    val sub = file.replaceAllLiterally(srcdir,"")
+    val sub = file.replaceAllLiterally(srcdir, "")
     val complete = dstdir + sub
 
     println(s"srcdir $srcdir")

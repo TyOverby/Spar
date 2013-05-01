@@ -10,17 +10,10 @@ import java.io.File
 
 case class RuleParsingFailure(msg: String) extends Exception(msg)
 
-case class ProgramCompilationFailure(filename: String, msg: String) extends Exception(msg)
+case class ProgramCompilationFailure(msg: String, fileName: String) extends Exception(s"Error in $fileName"+msg)
 
 object PublicProducer {
-  /**
-   * Parses the rules for a compilation from a fileName
-   * @param fileName The path to the file that contains the rules
-   * @return A list of rules that were parsed from the file.
-   * @throws RuleParsingFailure If the rules can't be parsed
-   */
-  def parseRules(fileName: String): List[Rule] = {
-    val source = Source.fromFile(fileName)
+  def parseRule(source: Source): List[Rule] = {
     val slurped = source.getLines().fold("")(_ + _)
     val parsed = GeneratorParser.parseSlurped(slurped)
 
@@ -39,54 +32,52 @@ object PublicProducer {
     }
   }
 
-  def parseAllRules(fileNames: String*): List[Rule] = {
-    fileNames.map(parseRules).foldLeft(List[Rule]())(_ ++ _)
+  def parseRule(file: File): List[Rule] = parseRule(Source.fromFile(file))
+
+  def parseRuleSlurped(str: String): List[Rule] = parseRule(Source.fromString(str))
+
+  def parseRuleSources(sources: Source*): List[Rule] = {
+    sources.map(parseRule).flatten.toList
   }
 
-  /**
-   * Parses the lisp program from a filename
-   * @param fileName The name of the file that contains the lisp program
-   * @return (fileName, tokens) A tuple containing the file name with the list of tokens that make up the program
-   */
-  def parseSource(fileName: String): (String, List[LispToken]) = {
-    val source = Source.fromFile(fileName)
-    val slurped = source.foldLeft("")(_ + _)
+  def parseRuleFiles(files: File*): List[Rule] = parseRuleSources(files.map(Source.fromFile): _*)
 
-    parseStringSource(slurped,fileName)
+  def parseSource(source: Source): List[LispToken] = {
+    val slurped = source.getLines().foldLeft("")(_ + "\n" + _)
+    parseSourceSlurped(slurped, source.descr)
   }
 
-  /**
-   * TODO: write documentation
-   * @param slurped
-   * @param fileName
-   * @return
-   */
-  def parseStringSource(slurped: String, fileName: String = "<no file>"):(String, List[LispToken]) = {
+  def parseSource(file: File): List[LispToken] = parseSource(Source.fromFile(file))
+
+  def parseSourceSlurped(slurped: String, fileName: String): List[LispToken] = {
     val parts = LispParser.parseSlurped(slurped)
 
     parts match {
-      case LispParser.Success(result: List[LispToken], _) => (fileName, result)
-      case x@LispParser.NoSuccess(_, _) => throw ProgramCompilationFailure(fileName, x.toString)
+      case LispParser.Success(result: List[LispToken], _) => result
+      case x@LispParser.NoSuccess(_, _) => throw ProgramCompilationFailure(x.toString, fileName)
     }
   }
 
-  /**
-   * Compiles the program with the provided rules
-   * @param rules The rules to compile the program against
-   * @param program The program to be compiled
-   * @return
-   */
-  def compile(program: (String, List[LispToken]), rules: List[Rule]): (String, String) = {
-    val (filename, tokens) = program
+  def parseSourceSources(sources: Source*): List[LispToken] = sources.map(parseSource).flatten.toList
 
-    (filename, Producer.produceAll(tokens)(rules))
+  def parseSourceFiles(files: File*): List[LispToken] = parseSourceSources(files.map(Source.fromFile): _*)
+
+  def compile(program: List[LispToken], rules: List[Rule]): String = {
+    Producer.produceAll(program)(rules)
   }
 
-  def compileFiles(programFile: String, rulesFiles: String*): (String, String) = {
-    compile(parseSource(programFile), parseAllRules(rulesFiles:_*))
+  def compileSourceRules(program: Source, rules: List[Rule]): String = {
+    compile(parseSource(program), rules)
   }
 
-  def compileFile(file: File, rules: List[Rule]): (String, String) = {
-    compile(parseSource(file.toString), rules)
+  def compileFileRules(program: File, rules: List[Rule]): String = {
+    compile(parseSource(program), rules)
+  }
+
+  def compileSourceSources(program: Source, rules: List[Source]): String = {
+    compile(parseSource(program), parseRuleSources(rules: _*))
+  }
+  def compileFileFiles(program: File, rules: List[File]): String = {
+    compileSourceRules(Source.fromFile(program), parseRuleFiles(rules:_*))
   }
 }

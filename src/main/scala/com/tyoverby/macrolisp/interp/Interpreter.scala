@@ -3,11 +3,12 @@ package com.tyoverby.macrolisp.interp
 import org.mozilla.javascript._
 import com.tyoverby.macrolisp.pub.PublicProducer
 import com.tyoverby.macrolisp.parsers.lisp.{Token => LispToken}
+import scala.io.Source
 
 object Interpreter extends App {
   // Compiler
-  val rulesFiles = List("math", "flow", "list", "object", "set", "last").map("./src/test/resources/standard/" + _ + ".rules")
-  var rules = PublicProducer.parseAllRules(rulesFiles: _*)
+  val rulesFiles = List("math", "flow", "list", "object", "set", "last").map("./src/test/resources/standard/" + _ + ".rules").map(Source.fromFile)
+  var rules = PublicProducer.parseRuleSources(rulesFiles: _*)
 
   val context = Context.enter()
   //  val shell = new Shell() {}
@@ -19,7 +20,7 @@ object Interpreter extends App {
     val i = InterpreterHelper.retrieveStatement()
 
     val input = if (i.startsWith("#reload")) {
-      rules = PublicProducer.parseAllRules(rulesFiles: _*)
+      rules = PublicProducer.parseRuleSources(rulesFiles: _*)
       println("<< rules reloaded >>")
       InterpreterHelper.retrieveStatement()
     } else {
@@ -30,12 +31,12 @@ object Interpreter extends App {
       val actualInput = if (input.startsWith("#generate")) input.replace("#generate", "") else input
 
 
-      val program: (String, List[LispToken]) = PublicProducer.parseStringSource(actualInput)
+      val program: List[LispToken]= PublicProducer.parseSourceSlurped(actualInput, "<console>")
       val compiled = PublicProducer.compile(program, rules)
       line += 1
       val result =
-        if (input.startsWith("#generate")) compiled._2
-        else context.evaluateString(scope, compiled._2, "<terminal>", line, null)
+        if (input.startsWith("#generate")) compiled
+        else context.evaluateString(scope, compiled, "<terminal>", line, null)
 
 
       println(s"$result")

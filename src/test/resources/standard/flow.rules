@@ -6,8 +6,8 @@
 
 # lambda args as array #
 (lambda :arg :body) => {
- "(function () { var " :arg "= Array.prototype.slice.call(arguments); return " :body ";})"
-}
+    "(function () { var " :arg "= Array.prototype.slice.call(arguments); return " :body ";})"
+ }
 
 # define #
 (define :name :value) => {
@@ -57,12 +57,10 @@
      "default: return " :defcase ";}})()"
  }
 
-
 # new #
 (new :obj :args...) => {
     "( new " :obj "(" :args,,, "))"
 }
-
 
 # single begin #
 (begin :x) => { :x }
