@@ -15,7 +15,8 @@ The basic data flow operates like this:
        
 For example, if you don't like the way that XML looks, you could define the following for compilation to XML:
 
-= Rules File
+Rules File
+----------
 The rules file defines the transformations that occur when encountered in the program.
 If the first rule doesn't match, it will try the seccond, and so on until it runs out of rules,
 in which case it will error.
@@ -28,7 +29,8 @@ in which case it will error.
     # Raw text
     :text => { :text }
         
-= Program
+Program
+-------
     
     (html 
       (head (title my page))
@@ -38,7 +40,8 @@ in which case it will error.
           (li more text here)
           (li an unordered list))))
                   
-= Result
+Result
+------
 
     <html>
         <head>
