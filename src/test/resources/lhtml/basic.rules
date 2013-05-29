@@ -1,0 +1,25 @@
+# Elements with attrs #
+(:name ((:key :value)...) :children...) => {
+    "\n<" :name ( " " :key "=" :value)... ">\n"
+        :children...
+    "\n</" :name ">"
+}
+
+# Basic Element #
+(:name :children...) => {
+    "\n<" :name ">\n"
+        :children...
+    "\n</" :name ">"
+}
+
+# Quote #
+(quote :text...) =>{
+     (:text " ")...
+}
+
+# catch #
+() => "FAIL"
+
+# Raw Text #
+:text => { :text }
+

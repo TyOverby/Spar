@@ -71,7 +71,13 @@ class FullRangeTest extends FlatSpec with ShouldMatchers {
 
     val parsedRules = parseRules(rules)
 
-    //println(produce(parseProgram(prog))(parsedRules))
+   // produce(parseProgram(prog))(parsedRules) should equal ("")
+  }
+
+  it should "not break when encountering a '()'" in {
+    val rules = ""
+    val prog = "()"
+    produce(parseProgram(prog))(parseRules(rules)) should equal ("nothing ")
   }
 
 }

@@ -10,7 +10,7 @@ import java.io.File
 
 case class RuleParsingFailure(msg: String) extends Exception(msg)
 
-case class ProgramCompilationFailure(msg: String, fileName: String) extends Exception(s"Error in $fileName"+msg)
+case class ProgramCompilationFailure(msg: String, fileName: String) extends Exception(s"Error in $fileName" + msg)
 
 object PublicProducer {
   def parseRule(source: Source): List[Rule] = {
@@ -77,7 +77,8 @@ object PublicProducer {
   def compileSourceSources(program: Source, rules: List[Source]): String = {
     compile(parseSource(program), parseRuleSources(rules: _*))
   }
+
   def compileFileFiles(program: File, rules: List[File]): String = {
-    compileSourceRules(Source.fromFile(program), parseRuleFiles(rules:_*))
+    compileSourceRules(Source.fromFile(program), parseRuleFiles(rules: _*))
   }
 }
