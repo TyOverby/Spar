@@ -1,3 +1,14 @@
+# class #
+(class :name (:args...) :body...) => {
+   "function " :name "(" :args,,, "){\n"
+       (:body "\n")...
+   "};"
+}
+
+# member #
+(member :name :value) => {
+    "this." :name " = " :value ";\n"
+}
 
 # lambda #
 (lambda (:args...) :body) => {
@@ -29,7 +40,7 @@
     "((function(" :name,,, "){ return " :body ";})(" :value,,, "))"
 }
 
-# let #
+# let star #
 (let* ((:name :value)...) :body) => {
     "(function(){" ("var " :name "=" :value ";")... "return " :body ";})()"
 }

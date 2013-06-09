@@ -1,4 +1,4 @@
-name := "LispParser"
+name := "Spar"
 
 version := "0.0.1"
 
