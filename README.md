@@ -1,5 +1,8 @@
-LispTransformer
-===============
+Spar 
+====
+
+(S-expression PARser)
+---------------------
 
 A domain specific language that allows the creation of a lisp compiler to any target language.
 
