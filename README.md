@@ -1,5 +1,8 @@
-LispTransformer
-===============
+Spar 
+====
+
+(S-expression PARser)
+---------------------
 
 A domain specific language that allows the creation of a lisp compiler to any target language.
 
@@ -9,9 +12,9 @@ via intermediate rules.
 
 The basic data flow operates like this:
 
-    Rules File
-                = compiler => Output program
-       Program 
+    Rules File => |
+                  | => compiler => Output program
+       Program => |
        
 For example, if you don't like the way that XML looks, you could define the following for compilation to XML:
 
@@ -58,3 +61,14 @@ Result
         </body>
     </html>
     
+Future
+------
+
+As of now, I have the following compilers in beta:
+* Lisp -> Javascript
+* S-Expression -> Html
+* S-Expression -> LaTeX
+ 
+I plan on adding more feature in the near future such as:
+* Macros
+* Quote and UnQuote for otherwise un-parsable grammers
