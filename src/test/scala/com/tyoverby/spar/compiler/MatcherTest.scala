@@ -12,7 +12,7 @@ class MatcherTest extends FlatSpec with Matchers {
   implicit def str2reader(str: String) = new CharSequenceReader(str)
 
   def getEnv(program: String, rules: String): Env[String, Token] = {
-    val firstRule = parseSlurped(rules).head.get
+    val firstRule = parseSlurped(rules).get.head
     val parsedProg = parseProgram(program).get.head
     PatternMatcher.matchExpr(parsedProg, firstRule)
   }

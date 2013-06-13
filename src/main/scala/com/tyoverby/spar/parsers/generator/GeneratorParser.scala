@@ -14,26 +14,15 @@ object GeneratorParser extends JavaTokenParsers {
   def parseJS: Parser[JSSide] = (GenJsParser.parseProgram ^^ JSSide).asInstanceOf[Parser[JSSide]]
 
 
-  def parseRule: Parser[Rule] = parseLisp ~ "=>" ~ parseJS ^^ {
+  def parseRule: Parser[Rule] = rep(comment)~> parseLisp ~ "=>" ~ parseJS <~ rep(comment) ^^ {
     case lisp ~ "=>" ~ js => Rule(lisp, js)
   }
 
-  def separator = "#[ a-zA-Z0-9]+#".r
+  def comment = "#[^\n]*\n?".r
 
-  def parseRules: Parser[List[Rule]] = (rep1sep(parseRule, separator)) // ^^ {(a,b) => List(a,b)}
+  def parseRules: Parser[List[Rule]] = rep(parseRule)
 
-  def parseSlurped(str: String): List[ParseResult[Rule]] = {
-    val split = str.split(separator.toString()).filter(_.trim.length > 0)
-    split.map(x => new CharSequenceReader(x))
-      .map(parseRule)
-      .toList
+  def parseSlurped(str: String): ParseResult[List[Rule]] = {
+    parseRules(new CharSequenceReader(str))
   }
-
-  //  def parseSlurpedDebug(str: String): List[(ParseResult[Rule], String)] = {
-  //    val split = str.split(separator.toString()).filter(_.trim.length > 0)
-  //    split.map(x => new CharSequenceReader(x))
-  //      .map(parseRule)
-  //      .zip(split)
-  //      .toList
-  //  }
 }

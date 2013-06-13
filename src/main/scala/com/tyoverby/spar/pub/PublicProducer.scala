@@ -14,21 +14,12 @@ case class ProgramCompilationFailure(msg: String, fileName: String) extends Exce
 
 object PublicProducer {
   def parseRule(source: Source): List[Rule] = {
-    val slurped = source.getLines().fold("")(_ + _)
+    val slurped = source.getLines().mkString("\n")
     val parsed = GeneratorParser.parseSlurped(slurped)
 
-    val failed = parsed.filter {
-      case GeneratorParser.NoSuccess(_, _) => true
-      case _ => false
-    }
-
-    if (!failed.isEmpty) throw RuleParsingFailure(failed.map(_.toString).mkString("\n\n"))
-
-
-
-    parsed.map {
-      case GeneratorParser.Success(result: Rule, _) => result
-      case x@GeneratorParser.NoSuccess(_, _) => throw RuleParsingFailure(x.toString)
+    parsed match {
+      case GeneratorParser.NoSuccess(_, _) => throw RuleParsingFailure(parsed.toString)
+      case GeneratorParser.Success(result: List[Rule], _) => result
     }
   }
 
@@ -37,7 +28,7 @@ object PublicProducer {
   def parseRuleSlurped(str: String): List[Rule] = parseRule(Source.fromString(str))
 
   def parseRuleSources(sources: Source*): List[Rule] = {
-    sources.map(parseRule).flatten.toList
+    sources.flatMap(parseRule).toList
   }
 
   def parseRuleFiles(files: File*): List[Rule] = parseRuleSources(files.map(Source.fromFile): _*)

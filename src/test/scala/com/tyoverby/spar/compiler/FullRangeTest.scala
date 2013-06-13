@@ -6,7 +6,7 @@ import com.tyoverby.spar.parsers.generator.{Rule, GeneratorParser}
 import com.tyoverby.spar.parsers.lisp.{Token => LispToken, LispParser}
 
 class FullRangeTest extends FlatSpec with Matchers {
-  def parseRules(rules: String): List[Rule] = GeneratorParser.parseSlurped(rules).map(_.get)
+  def parseRules(rules: String): List[Rule] = GeneratorParser.parseSlurped(rules).get
   def parseProgram(program: String): List[LispToken] = LispParser.parseSlurped(program).get
   val produce = (Producer.produceAll(_:List[LispToken])(_:List[Rule])).curried
 

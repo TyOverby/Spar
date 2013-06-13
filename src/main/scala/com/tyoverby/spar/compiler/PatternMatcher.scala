@@ -9,7 +9,7 @@ import com.tyoverby.spar.parsers.lisp.LispTokens.Identifier
 
 object PatternMatcher {
 
-  case class PatternNotMatchedException(token: LispToken) extends Exception(s"Could not match $token with a rule.")
+  case class PatternNotMatchedException(token: LispToken, rules: List[Rule] = Nil) extends Exception(s"Could not match $token with a rule.  Available rules: ${rules.mkString("[", ",", "]")}")
 
   def matcher(mToken: LispToken, progToken: LispToken)(env: Env[String, LispToken]): Env[String, LispToken] = {
     (mToken, progToken) match {
@@ -112,7 +112,7 @@ object PatternMatcher {
 
     rules.find(attemptToFind) match {
       case Some(r) => (matchExpr(progToken, r), r.js)
-      case None => throw PatternNotMatchedException(progToken)
+      case None => throw PatternNotMatchedException(progToken, rules)
     }
   }
 }

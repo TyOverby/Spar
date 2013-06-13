@@ -20,5 +20,5 @@ object GenJsParser extends JavaTokenParsers {
 
   def exp: Parser[List[Token]] = "{" ~> rep1(innerExp) <~ "}"
 
-  def parseProgram: Parser[List[Token]] = phrase(exp)
+  def parseProgram: Parser[List[Token]] = exp
 }
